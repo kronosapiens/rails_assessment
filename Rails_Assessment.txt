@@ -15,18 +15,57 @@ Questions to be answered in the assesment.txt file.
 
 How does rails communicate with the database?  Please be thorough in discussing all the config files and pieces of rails necessary to communicate with the database.
 
+  Excellent question. Much of Rails' database functionality comes from ActiveRecord. AR works by providing a set of classes with advanced functionality, which we set as the parent classes of all of our migrations and models. By setting these AR classes as the parents of our migrations and models, we give them the ability to interact with each other, by way of the methods of the AR superclasses.
+
+  Once the models and migrations are set up, Rails interacts with the database by interacting with the classes and objects that represent the tables and rows in the db, in the same way it would interact with any other object.
+
+  On the technical side, Rails gets information about how to communicate with the database via the config/database.yml file, which contains information on which "adapter" to use to talk to the databased (SQLite3 vs MySQL, for example), as well as the route to the database. Rails projects typically contain multiple databases, for the testing, development, and production environments. Various places in the appliction will "switch" between different databased by modifying the RAILS_ENV variable.
+
+  The rest of the logic around working with databases is contained in various rails-specific methods that I haven't investigated fully and thus can't really talk about.
+
 What is a resource?
 
+  A resource is a unit of organized, stored information, most often defined as a model with corresponding databased tables, migrations, and controllers. Resources are what users come to your site to interact with; they are the source of your sites value. Most web development is creating ways for users to interact with resources (using RESTful routes and CRUD operations). 
+
 What are the standard RESTful routes for a resource?
+  
+  Show all
+  See new
+  Create new
+  Show invidual
+  Edit individual
+  Update individual (although I don't see how this is different from Edit)
+  Destroy individual
 
 What is CRUD?
 
+  The commonly accepted set of possible actions on a resource:
+  Create
+  Read
+  Update
+  Destroy
+
 What is REST?
+
+  REpresentational State Transfer, a theory of web design which holds that URLs should be related semantically to their intended purpose.
 
 What is the difference between CRUD and REST?
 
+  CRUD refers to a set of possible operations on data. REST refers to a theory of web design that emphasized semantic relationships between URLs and the resources they affect.
+
 Describe the flow of a request from a users browser through the rails stack and back.
+
+  A request is sent from the browser to the topmost module in a rails stack. The request is then processed sequentially by the stack, beginning at the topmost module and ending at the bottom, where your program's controllers and models live. In general, the intermediary processing is to document, filter, and log the data before it reaches your models, as well as take of many of the tasks involved with communicating with the web.
+
+  Once the request reaches your controller, it is processed and sent through your various models, where the core of your program does its work. Once the models have finished processing the request, it is sent back up through the stack, being prepared to be sent back out through the web, and to be received by the user's browser.
 
 What are HTTP verbs?
 
+  GET - the most common request, used when the user wants to only receive data from the server.
+  POST - used when the user wants to submit new data to the server, usually to create new objects.
+  PATCH - less often used, used when the user wants to edit pre-existing data.
+  PUT - similar to PATCH, I'm not entirely sure the distinction between them.
+
 Why do we use migrations.
+
+  Migrations are used to create tables in our database. We define the table's scheme in our migration file, and then 'run' the migration to edit the databased according to that definition. Complex databases will usually involve running multiple migrations in sequence, each of which make some small change to the database. This system may seem convoluted at first, but has advantages when considering a project being developed over a long period of time by many people.
